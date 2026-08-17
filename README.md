@@ -5,8 +5,10 @@ time at every 100m mark around the track.
 
 **Live site:** https://rminert.github.io/pace-to-track-calculator/
 
-Every push to `main` deploys. The workflow enables Pages itself on its first run, so no manual
-setup is needed while the repo is public.
+Publishing needs Pages switched on once, by hand: **Settings → Pages → Build and deployment →
+Source: GitHub Actions**. The workflow asks the API to enable it (`enablement: true`), but the
+`GITHUB_TOKEN` is refused with `Resource not accessible by integration`, so that call cannot
+substitute for the settings change. Once Pages is on, every push to `main` deploys.
 
 ## Two tabs
 

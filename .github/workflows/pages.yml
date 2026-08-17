@@ -26,9 +26,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # enablement turns Pages on via the API on the first run, so the repo
-      # does not need to be configured by hand. This requires a public repo or
-      # a plan that includes Pages for private repos.
+      # enablement asks the API to turn Pages on, but GITHUB_TOKEN is refused
+      # ('Resource not accessible by integration'), so Pages still has to be
+      # enabled once under Settings -> Pages -> Source: GitHub Actions. Kept
+      # because it is a no-op once the site exists.
       - uses: actions/configure-pages@v5
         with:
           enablement: true
