@@ -1,9 +1,7 @@
 name: Deploy to GitHub Pages
 
 # Deploys only from main (plus manual runs) so feature branches don't publish
-# over the live site. Requires Pages to be enabled once under
-# Settings -> Pages -> Build and deployment -> Source: GitHub Actions;
-# GITHUB_TOKEN is not permitted to turn Pages on by itself.
+# over the live site.
 on:
   push:
     branches:
@@ -28,7 +26,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # enablement turns Pages on via the API on the first run, so the repo
+      # does not need to be configured by hand. This requires a public repo or
+      # a plan that includes Pages for private repos.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
