@@ -5,6 +5,11 @@ time at every 100m mark around the track.
 
 **Live site:** https://rminert.github.io/pace-to-track-calculator/
 
+Publishing needs one manual step first: **Settings → Pages → Build and deployment → Source:
+GitHub Actions**. `GITHUB_TOKEN` cannot enable Pages on its own, and Pages on a private repo
+requires a paid plan — make the repo public if you're on Free. After that, every push to `main`
+deploys.
+
 ## Two tabs
 
 **Calculator** — pick a pace (min/mi or min/km) and a distance (200m through 5K presets, or any
