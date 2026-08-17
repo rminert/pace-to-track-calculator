@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track Splits Calculator</title>
+<meta name="description" content="Target 100m / 200m / 300m / 400m track splits for any pace and rep distance.">
+<meta name="theme-color" content="#0B0F12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0F12'/%3E%3Cpath d='M16 5c3 4 6 5.5 6 9.5A6 6 0 0 1 16 21a6 6 0 0 1-6-6.5C10 10.5 13 9 16 5z' fill='%23007EA7'/%3E%3Crect x='12' y='23' width='8' height='4' rx='2' fill='%23FFB81C'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="30" height="30" focusable="false">
+        <path d="M16 3c3.6 4.6 7 6.4 7 11a7 7 0 0 1-14 0c0-4.6 3.4-6.4 7-11z" fill="var(--ff-blue)"/>
+        <path d="M16 9.5c1.7 2.3 3.2 3.2 3.2 5.4a3.2 3.2 0 1 1-6.4 0c0-2.2 1.5-3.1 3.2-5.4z" fill="var(--ff-accent)"/>
+        <rect x="11.5" y="23" width="9" height="4.5" rx="2.25" fill="#fff"/>
+      </svg>
+    </span>
+    <div class="header-text">
+      <h1>Track Splits</h1>
+      <p>Pace &rarr; target time at every mark</p>
+    </div>
+  </div>
+</header>
+
+<nav class="tabbar">
+  <div class="wrap" role="tablist" aria-label="Views">
+    <button class="tab" id="tab-calc" role="tab" aria-selected="true" aria-controls="panel-calc" data-panel="panel-calc">Calculator</button>
+    <button class="tab" id="tab-chart" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-chart" data-panel="panel-chart">Pace Chart</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ CALCULATOR ============ -->
+  <section id="panel-calc" role="tabpanel" aria-labelledby="tab-calc" class="panel">
+
+    <div class="card controls">
+      <div class="field">
+        <label for="pace-input">Target pace</label>
+        <div class="pace-row">
+          <input id="pace-input" type="text" inputmode="numeric" autocomplete="off"
+                 placeholder="8:00" value="8:00" aria-describedby="pace-error">
+          <div class="seg" role="group" aria-label="Pace unit">
+            <button type="button" class="seg-btn is-active" data-unit="mi" aria-pressed="true">min/mi</button>
+            <button type="button" class="seg-btn" data-unit="km" aria-pressed="false">min/km</button>
+          </div>
+        </div>
+        <p class="error" id="pace-error" role="alert" hidden></p>
+      </div>
+
+      <div class="field">
+        <label id="dist-label">Rep distance</label>
+        <div class="chips" role="group" aria-labelledby="dist-label" id="dist-chips"></div>
+        <div class="custom-row" id="custom-row" hidden>
+          <label for="custom-dist" class="sr-only">Custom distance in meters</label>
+          <input id="custom-dist" type="number" inputmode="numeric" min="10" max="42195" step="1"
+                 placeholder="meters" value="500">
+          <span class="unit-suffix">meters</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="headline card" id="headline" hidden>
+      <p class="headline-label" id="headline-label"></p>
+      <p class="headline-time" id="headline-time"></p>
+      <p class="headline-sub" id="headline-sub"></p>
+    </div>
+
+    <div class="card table-card" id="splits-card" hidden>
+      <div class="table-head">
+        <h2>Splits</h2>
+        <button type="button" class="btn-ghost" id="copy-btn">Copy</button>
+      </div>
+      <div class="table-scroll">
+        <table class="data" id="splits-table">
+          <thead>
+            <tr>
+              <th scope="col">Distance</th>
+              <th scope="col">Elapsed</th>
+              <th scope="col">Segment</th>
+            </tr>
+          </thead>
+          <tbody id="splits-body"></tbody>
+        </table>
+      </div>
+      <p class="note">Elapsed = cumulative time at that mark. Segment = time for that piece alone.</p>
+    </div>
+  </section>
+
+  <!-- ============ PACE CHART ============ -->
+  <section id="panel-chart" role="tabpanel" aria-labelledby="tab-chart" class="panel" hidden>
+
+    <div class="card controls">
+      <div class="field">
+        <label for="chart-filter">Jump to pace</label>
+        <div class="pace-row">
+          <input id="chart-filter" type="text" inputmode="numeric" autocomplete="off" placeholder="8:00">
+          <div class="seg" role="group" aria-label="Chart pace unit">
+            <button type="button" class="seg-btn is-active" data-chart-unit="mi" aria-pressed="true">min/mi</button>
+            <button type="button" class="seg-btn" data-chart-unit="km" aria-pressed="false">min/km</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card table-card">
+      <div class="table-head">
+        <h2 id="chart-title">Splits by pace</h2>
+      </div>
+      <div class="table-scroll chart-scroll" id="chart-scroll">
+        <table class="data chart" id="chart-table">
+          <thead>
+            <tr>
+              <th scope="col" id="chart-pace-head">Pace</th>
+              <th scope="col">100m</th>
+              <th scope="col">200m</th>
+              <th scope="col">300m</th>
+              <th scope="col">400m</th>
+            </tr>
+          </thead>
+          <tbody id="chart-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <p class="footnote">Splits assume a standard 400m lap in lane 1. Outer lanes run longer per lap.</p>
+</main>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
